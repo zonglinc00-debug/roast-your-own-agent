@@ -30,9 +30,15 @@ def main() -> None:
         raise SystemExit(f"roast is {len(ROAST)} characters, expected 1..200")
     if ROAST.strip() == "":
         raise SystemExit("roast is only whitespace")
+    if "\n" in ROAST or "\r" in ROAST:
+        raise SystemExit("roast must be a single line")
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     with open(TARGET, "w", encoding="utf-8", newline="") as f:
         f.write(ROAST)
+    with open(TARGET, "rb") as f:
+        written = f.read()
+    if written != ROAST.encode("utf-8"):
+        raise SystemExit("entry.txt does not match the roast byte for byte")
     print(f"roast-your-own-agent: wrote {TARGET} ({len(ROAST)} characters)")
 
 
